@@ -23,13 +23,21 @@ jobs:
     environment:
       - REPO_URL: https://github.com/jayanta525/openwrt-nanopi-r2s.git
       - BRANCH: rk3328
-      - CONFIG: https://raw.githubusercontent.com/jayanta525/openwrt-nanopi-r2s/circleci/config.seed
-      - FEEDS: https://raw.githubusercontent.com/jayanta525/openwrt-nanopi-r2s/circleci/feeds.conf
-      - SCRIPT: https://raw.githubusercontent.com/jayanta525/openwrt-nanopi-r2s/circleci/scripts/adjust-feeds.sh
-      - CACHE: new-build-cache
+      - CONFIG: config.seed
+      - FEEDS: feeds.conf
+      - SCRIPT: scripts/adjust-feeds.sh
+      - CACHE: build-cache3
 
     working_directory: ~/
     steps:
+      - run:
+          name: Prepare for checkout
+          command: |
+            mkdir github
+
+      - checkout:
+          path: github/
+
       - run:
           name: generate_cache_hash
           command: |
@@ -57,15 +65,17 @@ jobs:
             cd openwrt/
             pyenv global 3.5.2
             rm .config || true
+            ./scripts/feeds clean
             rm feeds.conf || true
-            wget $FEEDS -O feeds.conf
+            cp ../github/$FEEDS feeds.conf
             ./scripts/feeds update -a
       - run:
           name: Execute Script
           no_output_timeout: 60m
           command: |
             cd openwrt/
-            wget -O - $SCRIPT | bash
+            cp ../github/$SCRIPT script.sh
+            ./script.sh
 
       - run:
           name: Install Feeds
@@ -74,7 +84,7 @@ jobs:
             cd openwrt/
             pyenv global 3.5.2
             ./scripts/feeds install -a
-            wget $CONFIG -O .config
+            cp ../github/$CONFIG .config
             make defconfig
 
       - run:
@@ -116,7 +126,7 @@ jobs:
           command: |
             cd openwrt/bin/
             rm -rf packages/
-            cd targets/rockchip/armv8/
+            cd targets/*/*/
             zip -r target-package.zip packages/
             rm -rf packages/
 
