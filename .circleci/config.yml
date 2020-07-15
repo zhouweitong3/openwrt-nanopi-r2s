@@ -1,21 +1,5 @@
 version: 2
 jobs:
-  prepare:
-    machine:
-      image: ubuntu-1604:201903-01
-    
-    working_directory: ~/
-
-    steps:
-      - run:
-          name: Prepare
-          command: |
-            sudo rm -rf /var/lib/apt/lists/lock
-            sudo apt-get update
-            sudo rm -rf /var/lib/apt/lists/lock
-            sudo apt-get install -yq swig python3-dev build-essential git unzip ncurses-dev libz-dev libssl-dev python subversion gettext gawk wget curl rsync perl libelf-dev python3.5 libpython3.5-stdlib liblzma-dev
-            pyenv global 3.5.2
-
   build_openwrt:
     machine:
       image: ubuntu-1604:201903-01
@@ -26,7 +10,7 @@ jobs:
       - CONFIG: config.seed
       - FEEDS: feeds.conf
       - SCRIPT: scripts/adjust-feeds.sh
-      - CACHE: build-cache3
+      - CACHE: 15jul2020
 
     working_directory: ~/
     steps:
@@ -57,6 +41,11 @@ jobs:
             cd openwrt/
             sudo apt-get update
             sudo apt-get install -yq swig python3-dev zip libelf-dev
+
+      - run:
+          name: Clear previous builds
+          command: |
+            rm -rf openwrt/bin/targets || true
 
       - run:
           name: Update Feeds
@@ -127,7 +116,7 @@ jobs:
             cd openwrt/bin/
             rm -rf packages/
             cd targets/*/*/
-            zip -r target-package.zip packages/
+            zip -r kmod-package.zip packages/
             rm -rf packages/
 
       - store_artifacts:
@@ -137,14 +126,7 @@ workflows:
   version: 2
   main:
     jobs:
-      - prepare:
-          filters:
-            branches:
-              only: 
-                - circleci
       - build_openwrt:
-          requires:
-            - prepare
           filters:
             branches:
               only: 

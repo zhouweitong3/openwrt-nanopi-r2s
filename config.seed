@@ -1,6 +1,10 @@
 CONFIG_TARGET_rockchip=y
 CONFIG_TARGET_rockchip_armv8=y
 CONFIG_TARGET_rockchip_armv8_DEVICE_friendlyarm_nanopi-r2s=y
+CONFIG_ALL_KMODS=y
+CONFIG_JSON_OVERVIEW_IMAGE_INFO=y
+CONFIG_KERNEL_BUILD_DOMAIN="buildhost"
+CONFIG_KERNEL_BUILD_USER="builder"
 # CONFIG_FEED_luci is not set
 # CONFIG_FEED_packages is not set
 # CONFIG_FEED_routing is not set
