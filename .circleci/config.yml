@@ -10,7 +10,7 @@ jobs:
       - CONFIG: config.seed
       - FEEDS: feeds.conf
       - SCRIPT: scripts/adjust-feeds.sh
-      - CACHE: 15jul2020
+      - CACHE: 21jul2020
 
     working_directory: ~/
     steps:
