@@ -40,7 +40,7 @@ jobs:
             git config --global user.name "CircleCI"
             cd openwrt/
             sudo apt-get update
-            sudo apt-get install -yq swig python3-dev zip libelf-dev
+            sudo apt-get install -yq swig python3-dev zip libelf-dev fuse libfuse-dev
 
       - run:
           name: Clear previous builds
