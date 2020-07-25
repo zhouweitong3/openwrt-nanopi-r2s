@@ -40,7 +40,7 @@ jobs:
             git config --global user.name "CircleCI"
             cd openwrt/
             sudo apt-get update
-            sudo apt-get install -yq swig python3-dev zip libelf-dev fuse libfuse-dev
+            sudo apt-get install -yq swig python3-dev libelf-dev libfuse-dev
 
       - run:
           name: Clear previous builds
@@ -102,7 +102,7 @@ jobs:
           command: |
             cd openwrt/
             pyenv global 3.5.2
-            make -j3
+            make -j1 V=s
 
       - save_cache:
           key: cache-{{ checksum "/tmp/armv8-cache" }}
