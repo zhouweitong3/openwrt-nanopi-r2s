@@ -102,7 +102,7 @@ jobs:
           command: |
             cd openwrt/
             pyenv global 3.5.2
-            make -j1 V=s
+            make -j3
 
       - save_cache:
           key: cache-{{ checksum "/tmp/armv8-cache" }}
